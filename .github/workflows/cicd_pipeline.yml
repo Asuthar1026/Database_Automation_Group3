@@ -36,16 +36,18 @@ jobs:
           DB_HOST: ${{ secrets.DB_HOST }}
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-        run: mysql -h $DB_HOST -u $DB_USER -p$DB_PASSWORD < sql/create_schema.sql
+        run: |
+          mysql -h $DB_HOST -u $DB_USER -p"$DB_PASSWORD" < sql/create_schema.sql
 
       # Step 6: Apply Schema Update
       - name: Apply Schema Update
-        run: mysql -h $DB_HOST -u $DB_USER -p$DB_PASSWORD < sql/add_humidity_column.sql
+        run: |
+          mysql -h $DB_HOST -u $DB_USER -p"$DB_PASSWORD" < sql/add_humidity_column.sql
 
       # Step 7: Seed Data
       - name: Seed Data
-        run: mysql -h $DB_HOST -u $DB_USER -p$DB_PASSWORD < sql/data_seeding.sql
+        run: |
+          mysql -h $DB_HOST -u $DB_USER -p"$DB_PASSWORD" < sql/data_seeding.sql
 
       # Step 8: Run Concurrent Queries
       - name: Run Concurrent Queries
@@ -53,5 +55,4 @@ jobs:
           DB_HOST: ${{ secrets.DB_HOST }}
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_NAME: ${{ secrets.DB_NAME }}
         run: python3 scripts/multi_thread_queries.py
