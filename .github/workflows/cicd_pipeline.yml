@@ -16,7 +16,7 @@ jobs:
 
       # Step 2: Setup MySQL Client
       - name: Setup MySQL Client
-        run: sudo apt-get install -y mysql-client
+        run: sudo apt-get update && sudo apt-get install -y mysql-client
 
       # Step 3: Setup Python
       - name: Setup Python
