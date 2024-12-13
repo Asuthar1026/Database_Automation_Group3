@@ -1,0 +1,57 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout Repository
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # Step 2: Setup MySQL Client
+      - name: Setup MySQL Client
+        run: sudo apt-get install -y mysql-client
+
+      # Step 3: Setup Python
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      # Step 4: Install Python Dependencies
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install mysql-connector-python
+
+      # Step 5: Apply Initial Schema
+      - name: Apply Initial Schema
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+        run: mysql -h $DB_HOST -u $DB_USER -p$DB_PASSWORD < sql/create_schema.sql
+
+      # Step 6: Apply Schema Update
+      - name: Apply Schema Update
+        run: mysql -h $DB_HOST -u $DB_USER -p$DB_PASSWORD < sql/add_humidity_column.sql
+
+      # Step 7: Seed Data
+      - name: Seed Data
+        run: mysql -h $DB_HOST -u $DB_USER -p$DB_PASSWORD < sql/data_seeding.sql
+
+      # Step 8: Run Concurrent Queries
+      - name: Run Concurrent Queries
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+        run: python3 scripts/multi_thread_queries.py
