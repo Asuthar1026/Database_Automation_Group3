@@ -41,11 +41,19 @@ jobs:
 
       # Step 6: Apply Schema Update
       - name: Apply Schema Update
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
           mysql -h $DB_HOST -u $DB_USER -p"$DB_PASSWORD" < sql/add_humidity_column.sql
 
       # Step 7: Seed Data
       - name: Seed Data
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
           mysql -h $DB_HOST -u $DB_USER -p"$DB_PASSWORD" < sql/data_seeding.sql
 
