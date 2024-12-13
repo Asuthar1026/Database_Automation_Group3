@@ -14,10 +14,10 @@ def execute_query(query, connection_details):
 
 if __name__ == "__main__":
     connection_details = {
-        "host": "automated-mysql-server",
-        "user": "admin",
-        "password": "password123",
-        "database": "project_db"
+        "host": "automated-mysql-server-group3.mysql.database.azure.com",
+        "user": "admin_group3",
+        "password": "astha@group3",
+        "database": "group3"
     }
 
     queries = [
