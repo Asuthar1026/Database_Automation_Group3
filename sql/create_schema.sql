@@ -1,7 +1,3 @@
-CREATE DATABASE IF NOT EXISTS project_db;
-
-USE project_db;
-
 CREATE TABLE ClimateData (
     record_id INT AUTO_INCREMENT PRIMARY KEY,
     location VARCHAR(100) NOT NULL,
